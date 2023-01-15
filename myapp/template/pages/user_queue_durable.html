@@ -1,0 +1,59 @@
+{% extends 'home.html' %}
+{% block main %}
+<div class="container mt-1 p-3 rounded-2 cart bg-white">
+    <div class="d-flex flex-row align-items-center">
+        <span class="ml-2 fw-bold fs-5">รายการจองคิวครุภัณฑ์</span>
+    </div>
+    <div class="bg-white rounded-2 mb-4 px-5 py-3">
+        <div class="d-flex justify-content-between "></div>
+        <div class="d-flex row rounded-2 small fw-bold justify-content-between">
+            <div class="d-flex col-sm-12 col-md-12 col-lg-6">
+                <div class="align-items-center">
+                    <span>เรียงโดย</span>
+                    <div class="px-2 me-2 btn btn-outline-dark border-0
+                        rounded-pill">ล่าสุด</div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-12 col-lg-6">
+                <form class="d-flex" role="search">
+                    <input
+                        class="form-control me-2 border-dark"
+                        type="search"
+                        placeholder="Search"
+                        aria-label="Search"
+                    >
+                    <button class="btn btn-outline-dark" type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="text-center" scope="col">ลำดับ</th>
+                    <th scope="col">รายการ</th>
+                    <th class="text-center" scope="col">ประเภท</th>
+                    <th class="text-center" scope="col">ทำรายการเมื่อ</th>
+                    <th class="text-center" scope="col"></th>
+                </tr>
+            </thead>
+            <tbody id="xTable">
+                {% for AllQueueDurable in AllQueueDurable %}
+                <tr class="qrow text-center card-body">
+                    <td class="text-center">{{forloop.counter}}</td>
+                    <td>
+                        <p class="text-start">{{ AllQueueDurable.name }}</p>
+                    </td>
+                    <td>
+                        <p class="text-center">{{ AllQueueDurable.type }}</p>
+                    </td>
+                    <td>
+                        <p class="text-center">{{ AllQueueDurable.date_q|date:"j N Y" }}</p>
+                    </td>
+                </tr>
+
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

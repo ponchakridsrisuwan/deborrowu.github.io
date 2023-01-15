@@ -1,0 +1,43 @@
+{% extends 'homestaff.html' %} 
+{% block main %}
+
+    <div class="container mt-1 p-3 rounded-2 cart bg-white">
+        
+        <div class="row no-gutters">
+            <div class="col-md-12">
+            {% for position, items in items_position.items %}
+                <div class="product-details mr-2">
+                    <div class="d-flex flex-row align-items-center"><span
+                            class="ml-2 fw-bold fs-5">{{ position.nameposition }}</span></div>
+                            <div class="d-flex row rounded-2 small fw-bold justify-content-between">
+                                <div class="d-flex col-sm-12 col-md-12 col-lg-6">
+                                    <div class="align-items-center">
+                                        <span>เรียงโดย</span>
+                                        <div class="px-2 me-2 btn btn-outline-dark border-0 rounded-pill">ล่าสุด</div>
+                                        <div class="px-2 me-2 btn btn-outline-dark border-0 rounded-pill">ผู้ยืม</div>
+                                    </div>
+                                   
+                                </div>
+                                <div class="col-sm-12 col-md-12 col-lg-6">
+                                    <form class="d-flex" role="search">
+                                        <input class="form-control me-2 border-dark" type="search" placeholder="Search" aria-label="Search">
+                                        <button class="btn btn-outline-dark" type="submit">Search</button>
+                                    </form>
+                                </div>
+                            </div>
+                    <div class="d-flex justify-content-between align-items-center mt-3 p-2 items rounded-2 ">
+                        <div class="d-flex flex-row">
+                            {% for item in items %}
+                            <div class="ml-2"><span  class="font-weight-bold d-block">{{ item.name }}</span>
+                                <span class="small text-muted" name="spac"></span><br>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <hr>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+</div>
+        {% endblock %}

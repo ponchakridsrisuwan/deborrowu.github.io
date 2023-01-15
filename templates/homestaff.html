@@ -1,0 +1,107 @@
+{% load static %}
+{% if user.right == "เจ้าหน้าที่" or user.right == "ผู้ดูแลระบบ" or user.is_superuser and user.status == "ปกติ" %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>U BORROW U</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
+        crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@200;300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="{% static 'Style.css' %}">
+    <link rel="stylesheet" href="{% static 'detail.css' %}">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+    <script>
+        !function (e) { "use strict"; var t = function (e, t) { this.init("magnify", e, t) }; t.prototype = { constructor: t, init: function (t, n, r) { var i = "mousemove", s = "mouseleave"; this.type = t; this.$element = e(n); this.options = this.getOptions(r); this.nativeWidth = 0; this.nativeHeight = 0; this.$element.wrap('<div class="magnify" >'); this.$element.parent(".magnify").append('<div class="magnify-large" >'); this.$element.siblings(".magnify-large").css("background", "url('" + this.$element.attr("src") + "') no-repeat"); this.$element.parent(".magnify").on(i + "." + this.type, e.proxy(this.check, this)); this.$element.parent(".magnify").on(s + "." + this.type, e.proxy(this.check, this)) }, getOptions: function (t) { t = e.extend({}, e.fn[this.type].defaults, t, this.$element.data()); t.delay && typeof t.delay == "number" && (t.delay = { show: t.delay, hide: t.delay }); return t }, check: function (t) { var n = e(t.currentTarget), r = n.children("img"), i = n.children(".magnify-large"); if (!this.nativeWidth && !this.nativeHeight) { var s = new Image; s.src = r.attr("src"); this.nativeWidth = s.width; this.nativeHeight = s.height } else { var o = n.offset(), u = t.pageX - o.left, a = t.pageY - o.top; u < n.width() && a < n.height() && u > 0 && a > 0 ? i.fadeIn(100) : i.fadeOut(100); if (i.is(":visible")) { var f = Math.round(u / n.width() * this.nativeWidth - i.width() / 2) * -1, l = Math.round(a / n.height() * this.nativeHeight - i.height() / 2) * -1, c = f + "px " + l + "px", h = u - i.width() / 2, p = a - i.height() / 2; i.css({ left: h, top: p, backgroundPosition: c }) } } } }; e.fn.magnify = function (n) { return this.each(function () { var r = e(this), i = r.data("magnify"), s = typeof n == "object" && n; i || r.data("tooltip", i = new t(this, s)); typeof n == "string" && i[n]() }) }; e.fn.magnify.Constructor = t; e.fn.magnify.defaults = { delay: 0 }; e(window).on("load", function () { e('[data-toggle="magnify"]').each(function () { var t = e(this); t.magnify() }) }) }(window.jQuery);
+    </script>
+    <style>
+        .navbar-nav li:hover>ul.dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-submenu {
+            position: relative;
+        }
+
+        .dropdown-submenu>.dropdown-menu {
+            top: 0;
+            left: 100%;
+            margin-top: -6px;
+        }
+
+        .dropdown-menu>li>a:hover:after {
+            text-decoration: underline;
+            transform: rotate(-90deg);
+        }
+
+        .magnify {
+            position: relative;
+            cursor: none
+        }
+
+        .magnify-large {
+            position: absolute;
+            display: none;
+            width: 175px;
+            height: 175px;
+
+            -webkit-box-shadow: 0 0 0 7px rgba(255, 255, 255, 0.85), 0 0 7px 7px rgba(0, 0, 0, 0.25), inset 0 0 40px 2px rgba(0, 0, 0, 0.25);
+            -moz-box-shadow: 0 0 0 7px rgba(255, 255, 255, 0.85), 0 0 7px 7px rgba(0, 0, 0, 0.25), inset 0 0 40px 2px rgba(0, 0, 0, 0.25);
+            box-shadow: 0 0 0 7px rgba(255, 255, 255, 0.85), 0 0 7px 7px rgba(0, 0, 0, 0.25), inset 0 0 40px 2px rgba(0, 0, 0, 0.25);
+
+            -webkit-border-radius: 50%;
+            -moz-border-radius: 50%;
+            border-radius: 50%
+        }
+    </style>
+</head>
+
+<body class="">
+    {% include "components/headerstaff.html" %}
+    <br>
+    <main class="min-h-screen">
+        {% block main %}
+        <br><br><br>
+
+        <h3 class="text-center text-white">TODO LIST</h3>
+        {% endblock %}
+
+    </main>
+    <!-- {% include "components/footer.html" %} -->
+</body>
+
+</html>
+{% else %}
+<br>
+<h2 class="text-center">คุณไม่มีสิทธิ์เข้าถึง กรุณาติดต่อผู้ดูแลระบบ</h2>
+{% endif %}
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        window.addEventListener('scroll', function () {
+            if (window.scrollY > 50) {
+                document.getElementById('navbar_top').classList.add('fixed-top');
+                // add padding top to show content behind navbar
+                navbar_height = document.querySelector('.navbar').offsetHeight;
+                document.body.style.paddingTop = navbar_height + 'px';
+            } else {
+                document.getElementById('navbar_top').classList.remove('fixed-top');
+                // remove padding top from body
+                document.body.style.paddingTop = '0';
+            }
+        });
+    });
+
+</script>

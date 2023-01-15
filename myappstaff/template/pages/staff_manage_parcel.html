@@ -1,0 +1,612 @@
+{% extends 'homestaff.html' %} {% block main %}
+<div class="container">
+    <div class="bg-white rounded-2 mb-4 px-5 py-3">
+        <!-- จัดการวัสดุ-ครุภัณฑ์ -->
+        <div class="d-flex justify-content-between rounded-2
+            align-items-center">
+            <div>
+                <h5 class="fw-bold">จัดการวัสดุ</h5>
+            </div>
+            <div class="d-flex flex-row">
+                <div class="dropdown">
+                    <button class="btn border-0 dropdown-toggle" type="button" id="dropdownMenuButton1"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        ตัวเลือกการแสดงผล
+                    </button>
+                    <ul class="dropdown-menu text-center" aria-labelledby="dropdownMenuButton1">
+                        <div class="nav">
+                            <li>
+                                <a class="fa fa-th dropdown-item active ps-4" data-bs-toggle="tab" href="#matrix"></a>
+                            </li>
+                            <li>
+                                <a class="fa fa-list dropdown-item" data-bs-toggle="tab" href="#list"></a>
+                            </li>
+                            <li>
+                                <a class="fa fa-table dropdown-item pe-4" data-bs-toggle="tab" href="#table"></a>
+                            </li>
+                        </div>
+                    </ul>
+                </div>
+                <a class="btn btn-outline-dark rounded-pill ms-2" data-bs-toggle="modal"
+                    data-bs-target="#additem">เพิ่มรายการ</a>
+            </div>
+        </div>
+        <div class="d-flex row rounded-2 small fw-bold justify-content-between
+            mt-1">
+            <div class="d-flex col-sm-12 col-md-12 col-lg-6">
+                <div class="align-items-center">
+                    <span>เรียงโดย</span>
+                    <div class="px-2 me-2 btn btn-outline-dark border-0
+                        rounded-pill">
+                        ล่าสุด
+                    </div>
+                </div>
+                <div class="align-items-center">
+                    <div class="d-flex flex-row align-items-center">
+                        <label class="fw-bold me-2" id="dropdownMenu">หมวดหมู่</label>
+                        <select class="form-select border-0" aria-label="dropdownMenu">
+                            <option selected>เลือก</option>
+                            <option value="1">อุปกรณ์สื่อสาร</option>
+                            <option value="2">โดรน</option>
+                            <option value="3">คอมพิวเตอร์</option>
+                            <option value="4">IoT</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="align-items-center">
+                    <div class="d-flex flex-row align-items-center">
+                        <label class="fw-bold me-2" id="dropdownMenu">สถานะ</label>
+                        <select class="form-select border-0" aria-label="dropdownMenu">
+                            <option selected>ทั้งหมด</option>
+                            <option value="1">พร้อมยืม</option>
+                            <option value="2">ไม่พร้อมยืม</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-12 col-lg-6">
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2 border-dark" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-dark" type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+        <div class="modal fade" id="additem" tabindex="-1" aria-labelledby="additemModal" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-fullscreen-lg-down">
+                <form action="" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="additemModal">เพิ่มรายการวัสดุ</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">{{ form.as_p }}</div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">
+                                ยกเลิก
+                            </button>
+                            <button type="submit" name="Submit" class="btn btn-warning rounded-pill">
+                                ยืนยัน
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="tab-content">
+            <div class="tab-pane fade" id="table">
+                <!-- แบบtable -->
+                <table class="table table-striped">
+                    <thead class="table-dark">
+                        <tr>
+                            <th class="col-md-4" scope="col">รายการ</th>
+                            <th class="col-md-2 text-center" scope="col">หมวดหมู่</th>
+                            <th class="col-md-2 text-center" scope="col">สถานะ</th>
+                            <th class="col-md-2 text-center" scope="col">จำนวน</th>
+                            <th class="col-md-2 text-center" scope="col"> วันที่เพิ่มเข้าระบบ </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="xTable">
+                        {% for AllParcel in page.object_list %}
+                        <tr class="qrow text-center">
+                            <td>
+                                <a class="text-start text-black" style="text-decoration:none"
+                                    href="{% url 'staff_manage_detail' AllParcel.id %}">{{ AllParcel.name }}</a>
+                            </td>
+                            <td>
+                                <a class="text-center text-black" style="text-decoration:none"
+                                    href="{% url 'staff_manage_detail' AllParcel.id %}">{{ AllParcel.category }}</a>
+                            </td>
+                            <td>
+                                <a class="text-center text-black" style="text-decoration:none"
+                                    href="{% url 'staff_manage_detail' AllParcel.id %}">{{ AllParcel.status }}</a>
+                            </td>
+                            {% if AllParcel.quantitytype == "∞" %}
+                            <td>
+                                <a class="text-center text-black" style="text-decoration:none"
+                                    href="{% url 'staff_manage_detail' AllParcel.id %}">{{ AllParcel.quantitytype }}</a>
+                            </td>
+                            {% else %}
+                            <td>
+                                <a class="text-center text-black" style="text-decoration:none"
+                                    href="{% url 'staff_manage_detail' AllParcel.id %}">{{ AllParcel.quantity }}</a>
+                            </td>
+                            {% endif %}
+                            <td>
+                                <a class="text-center text-black" style="text-decoration:none"
+                                    href="{% url 'staff_manage_detail' AllParcel.id %}">{{ AllParcel.date|date:"d M y" }}</a>
+                            </td>
+                            <td>
+                                <i class="bi bi-three-dots-vertical"
+                                    data-bs-toggle="dropdown" aria-expanded="false"></i>
+                                <ul class="dropdown-menu dropdown-menu-lg-end shadow-sm text-center">
+                                    <li><a class="dropdown-item btn-0 btn-sm"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#DeleteTable-{{forloop.counter}}">ลบ</a>
+                                    </li>
+                                    <li><a data-bs-toggle="modal"
+                                            data-bs-target="#EditTable-{{forloop.counter}}"
+                                            class="dropdown-item btn-0 btn-sm">แก้ไข</a>
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <style>
+                            tr:hover {
+                                background: rgb(227, 227, 227);
+                            }
+
+                            td a {
+                                color: black;
+                                display: block;
+                                padding: max-width;
+                                text-decoration:none;
+                            }
+                        </style>
+                        <!-- ลบข้อมูล -->
+                        <div class="modal fade" name="DeleteMatrix" id="DeleteTable-{{forloop.counter}}" tabindex="-1"
+                            aria-labelledby="DeleteMatrixModal" aria-hidden="true">
+                            <div class="modal-dialog modal-lg
+                        modal-fullscreen-lg-down">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="DeleteMatrixModal">
+                                            คุณต้องการลบ {{ AllParcel.name }} หรือไม่
+                                        </h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <span class="fw-bold">ชื่อวัสดุ : </span><span class="small text-black-50">{{ AllParcel.name }}</span>
+                                    </div>
+                                    <div class="modal-body">
+                                        <span class="fw-bold">หมวดหมู่ : </span><span class="small text-black-50">{{ AllParcel.category }}</span>
+                                    </div>
+                                    <div class="modal-body">
+                                        <span class="fw-bold">สถานะ : </span><span class="small text-black-50">{{ AllParcel.status }}</span>
+                                    </div>
+                                    {% if AllParcel.quantitytype == "∞" %}
+                                    <div class="modal-body">
+                                        <span class="fw-bold">จำนวน : </span><span class="small text-black-50">{{ AllParcel.quantitytype }}</span>
+                                    </div>
+                                    {% else %}
+                                    <div class="modal-body">
+                                        <span class="fw-bold">จำนวน : </span><span class="small text-black-50">{{ AllParcel.quantity }}</span>
+                                    </div>
+                                    {% endif %}
+                                    <div class="modal-body">
+                                        <span class="fw-bold">รายละเอียด : </span><span class="small text-black-50">{{ AllParcel.description }}</span>
+                                    </div>
+                                    <div class="modal-body">
+                                        <span class="fw-bold">รูปภาพ : </span><img alt="image" class="rounded me-4 thumb-post" src="{{ AllParcel.image.url | safe }}" width="150" height="150">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="cancer" class="btn btn-secondary rounded-pill"
+                                            data-bs-dismiss="modal">
+                                            ยกเลิก
+                                        </button>
+                                        <a type="submit" value="ยืนยัน" class="btn btn-warning rounded-pill"
+                                            href="{% url 'delete_staff_manage_parcel' AllParcel.id %}">ยืนยัน</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- moal แก้ไขรายการ -->
+                        <div class="modal fade" id="EditTable-{{forloop.counter}}" tabindex="-1"
+                            aria-labelledby="edititemModal" aria-hidden="true">
+                            <div class="modal-dialog modal-lg
+                        modal-fullscreen-lg-down">
+                                <form action="{% url 'edit_staff_manage_parcel' AllParcel.id %}" method="POST"
+                                    enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="edititemModal">แก้ไขรายการ {{ AllParcel.name }}</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+
+                                        <div class="modal-body">
+                                            <p>
+                                                <label for="id_name">แก้ไขชื่อวัสดุ :</label>
+                                                <input type="text" name="name" class="form-control rounded-pill"
+                                                    maxlength="200" id="id_name" value="{{ AllParcel.name }}">
+                                            </p>
+                                            <p>
+                                                <label for="id_category">ตำแหน่งการวางวัสดุ :</label>
+                                                {{ form.nameposition }}
+                                            </p>
+                                            <p>
+                                                <label for="id_category">เลือกหมวดหมู่วัสดุ :</label>
+                                                {{ form.category }}
+                                            </p>
+                                            <p>
+                                                <label for="id_status">เลือกสถานะวัสดุ :</label>
+                                                {{ form.status }}
+                                            </p>
+                                            <p>
+                                                <label for="id_status">เลือกประเภทของจำนวน :</label>
+                                                {{ form.quantitytype }}
+                                            </p>
+                                            <p>
+                                                <label for="id_quantity">แก้ไขจำนวนวัสดุ :</label>
+                                                <input type="number" name="quantity" class="form-control rounded-pill"
+                                                    maxlength="200" id="id_quantity" value="{{ AllParcel.quantity }}">
+                                            </p>
+                                            <p>
+                                                <label for="id_description">รายละเอียดวัสดุ :</label>
+                                                <textarea name="description" cols="40" rows="10"
+                                                    class="form-control rounded-5"
+                                                    id="id_description">{{ AllParcel.description }}</textarea>
+                                            </p>
+                                            <p>
+                                                <label for="formFileMultiple" class="form-label" for="image">แก้ไขรูปภาพ :</label>
+                                                <input id="image" name="image" class="form-control rounded-pill" type="file" id="formFileMultiple" accept="image/*" multiple />
+                                            </p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn
+                                    btn-secondary rounded-pill" data-bs-dismiss="modal">ยกเลิก</button>
+                                            <button type="submit" class="btn btn-warning rounded-pill">ยืนยัน</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+   
+            <div class="tab-pane fade" id="list">
+                <!-- แบบยาว -->
+                {% for AllParcel in page.object_list %}
+                <div class="container mt-3 p-3 mb-2 rounded-2 border cart
+                    bg-white">
+                    <div class="d-flex align-items-center p-2">
+                        <div class="d-flex flex-row">
+                            <img alt="image" class="rounded me-4 thumb-post" src="{{ AllParcel.image.url | safe }}"
+                                width="150" height="150">
+                            <a class="text-black card" style="text-decoration:none"
+                                href="{% url 'staff_manage_detail' AllParcel.id %}">
+                                <div class="">
+                                    <div class="fs-5">{{ AllParcel.name }}</div>
+                                    <div class="text-success">{{ AllParcel.status }}</div>
+                                    <div class="small">
+                                        <div class="d-flex">
+                                            <span>หมวดหมู่</span>
+                                            <span class="ms-2">
+                                                {{ AllParcel.category }}
+                                            </span>
+                                        </div>
+                                        <div class="d-flex">
+                                            <span>วันที่เพิ่มเข้าระบบ</span>
+                                            <span class="ms-2">{{ AllParcel.date|date:"d M y" }}</span>
+                                        </div>
+                                        <div>
+                                            <a class="rounded-pill
+                                            align-items-center p-2" data-bs-toggle="modal"
+                                                data-bs-target="#DeleteLong-{{forloop.counter}}">
+                                                <i class="bi bi-trash text-black"></i>
+                                            </a>
+                                            <a class="rounded-pill
+                                            align-items-center p-2" data-bs-toggle="modal"
+                                                href="#EditLong-{{forloop.counter}}">
+                                                <i class="bi bi-pencil-square
+                                                text-black"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- ลบข้อมูล -->
+                <div class="modal fade" name="DeleteMatrix" id="DeleteLong-{{forloop.counter}}" tabindex="-1"
+                    aria-labelledby="DeleteMatrixModal" aria-hidden="true">
+                    <div class="modal-dialog modal-lg
+                    modal-fullscreen-lg-down">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="DeleteMatrixModal">
+                                    คุณต้องการลบ {{ AllParcel.name }} หรือไม่
+                                </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <span class="fw-bold">ชื่อวัสดุ : </span><span class="small text-black-50">{{ AllParcel.name }}</span>
+                            </div>
+                            <div class="modal-body">
+                                <span class="fw-bold">หมวดหมู่ : </span><span class="small text-black-50">{{ AllParcel.category }}</span>
+                            </div>
+                            <div class="modal-body">
+                                <span class="fw-bold">สถานะ : </span><span class="small text-black-50">{{ AllParcel.status }}</span>
+                            </div>
+                            {% if AllParcel.quantitytype == "∞" %}
+                            <div class="modal-body">
+                                <span class="fw-bold">จำนวน : </span><span class="small text-black-50">{{ AllParcel.quantitytype }}</span>
+                            </div>
+                            {% else %}
+                            <div class="modal-body">
+                                <span class="fw-bold">จำนวน : </span><span class="small text-black-50">{{ AllParcel.quantity }}</span>
+                            </div>
+                            {% endif %}
+                            <div class="modal-body">
+                                <span class="fw-bold">รายละเอียด : </span><span class="small text-black-50">{{ AllParcel.description }}</span>
+                            </div>
+                            <div class="modal-body">
+                                <span class="fw-bold">รูปภาพ : </span><img alt="image" class="rounded me-4 thumb-post" src="{{ AllParcel.image.url | safe }}" width="150" height="150">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="cancer" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">
+                                    ยกเลิก
+                                </button>
+                                <a type="submit" value="ยืนยัน" class="btn btn-warning rounded-pill"
+                                    href="{% url 'delete_staff_manage_parcel' AllParcel.id %}">ยืนยัน</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- moal แก้ไขรายการ -->
+                <div class="modal fade" id="EditLong-{{forloop.counter}}" tabindex="-1" aria-labelledby="edititemModal"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-lg
+                    modal-fullscreen-lg-down">
+                        <form action="{% url 'edit_staff_manage_parcel' AllParcel.id %}" method="POST"
+                            enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="edititemModal">แก้ไขรายการ {{ AllParcel.name }}</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+
+                                <div class="modal-body">
+                                    <p>
+                                        <label for="id_name">แก้ไขชื่อวัสดุ :</label>
+                                        <input type="text" name="name" class="form-control rounded-pill"
+                                            maxlength="200" id="id_name" value="{{ AllParcel.name }}">
+                                    </p>
+                                    <p>
+                                        <label for="id_category">ตำแหน่งการวางวัสดุ :</label>
+                                        {{ form.nameposition }}
+                                    </p>
+                                    <p>
+                                        <label for="id_category">เลือกหมวดหมู่วัสดุ :</label>
+                                        {{ form.category }}
+                                    </p>
+                                    <p>
+                                        <label for="id_status">เลือกสถานะวัสดุ :</label>
+                                        {{ form.status }}
+                                    </p>
+                                    <p>
+                                        <label for="id_status">เลือกประเภทของจำนวน :</label>
+                                        {{ form.quantitytype }}
+                                    </p>
+                                    <p>
+                                        <label for="id_quantity">แก้ไขจำนวนวัสดุ :</label>
+                                        <input type="number" name="quantity" class="form-control rounded-pill"
+                                            maxlength="200" id="id_quantity" value="{{ AllParcel.quantity }}">
+                                    </p>
+                                    <p>
+                                        <label for="id_description">รายละเอียดวัสดุ :</label>
+                                        <textarea name="description" cols="40" rows="10"
+                                            class="form-control rounded-5"
+                                            id="id_description">{{ AllParcel.description }}</textarea>
+                                    </p>
+                                    <p>
+                                        <label for="formFileMultiple" class="form-label" for="image">แก้ไขรูปภาพ :</label>
+                                        <input id="image" name="image" class="form-control rounded-pill" type="file" id="formFileMultiple" accept="image/*" multiple />
+                                    </p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn
+                                btn-secondary rounded-pill" data-bs-dismiss="modal">ยกเลิก</button>
+                                    <button type="submit" class="btn btn-warning rounded-pill">ยืนยัน</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="tab-pane active" id="matrix">
+                <div class="row small">
+                    {% for AllParcel in page.object_list %}
+                    <div class="col-6 col-sm-6 col-md-4 col-lg-3 mb-4">
+                        <div class="card border bg-gray">
+                            <div class="text-center">
+                                <img src="{{ AllParcel.image.url | safe }}" style="
+                                object-position: center;
+                                max-height: 250px;
+                                margin-bottom: 1rem;">
+                            </div>
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <a class="rounded-pill align-items-center
+                                        p-2" data-bs-toggle="modal" href="#DeleteMatrix-{{forloop.counter}}">
+                                        <i class="bi bi-trash
+                                            text-black"></i>
+                                    </a>
+                                    <a class="rounded-pill align-items-center
+                                        p-2" data-bs-toggle="modal" href="#edititem-{{forloop.counter}}">
+                                        <i class="bi
+                                            bi-pencil-square text-black"></i>
+                                    </a>
+                                </div>
+                                <a class="text-black" style="text-decoration:none"
+                                    href="{% url 'staff_manage_detail' AllParcel.id %}">
+                                    <div class="text-center">
+                                        <span class="card-title fs-5">
+                                            {{ AllParcel.name }}
+                                        </span>
+                                        <br>
+                                        <span class="mb-4 text-success">
+                                            {{ AllParcel.status }}
+                                        </span>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <span>หมวดหมู่</span>
+                                        <span>
+                                            {{ AllParcel.category }}
+                                        </span>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <span>วันที่เพิ่มเข้าระบบ</span>
+                                        <span>
+                                            {{ AllParcel.date|date:"d M y" }}
+                                        </span>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ลบข้อมูล -->
+                    <div class="modal fade" name="DeleteMatrix" id="DeleteMatrix-{{forloop.counter}}" tabindex="-1"
+                        aria-labelledby="DeleteMatrixModal" aria-hidden="true">
+                        <div class="modal-dialog modal-lg
+                            modal-fullscreen-lg-down">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="DeleteMatrixModal">
+                                        คุณต้องการลบ {{ AllParcel.name }} หรือไม่
+                                    </h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <span class="fw-bold">ชื่อวัสดุ : </span><span class="small text-black-50">{{ AllParcel.name }}</span>
+                                </div>
+                                <div class="modal-body">
+                                    <span class="fw-bold">หมวดหมู่ : </span><span class="small text-black-50">{{ AllParcel.category }}</span>
+                                </div>
+                                <div class="modal-body">
+                                    <span class="fw-bold">สถานะ : </span><span class="small text-black-50">{{ AllParcel.status }}</span>
+                                </div>
+                                {% if AllParcel.quantitytype == "∞" %}
+                                <div class="modal-body">
+                                    <span class="fw-bold">จำนวน : </span><span class="small text-black-50">{{ AllParcel.quantitytype }}</span>
+                                </div>
+                                {% else %}
+                                <div class="modal-body">
+                                    <span class="fw-bold">จำนวน : </span><span class="small text-black-50">{{ AllParcel.quantity }}</span>
+                                </div>
+                                {% endif %}
+                                <div class="modal-body">
+                                    <span class="fw-bold">รายละเอียด : </span><span class="small text-black-50">{{ AllParcel.description }}</span>
+                                </div>
+                                <div class="modal-body">
+                                    <span class="fw-bold">รูปภาพ : </span><img alt="image" class="rounded me-4 thumb-post" src="{{ AllParcel.image.url | safe }}" width="150" height="150">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="cancer" class="btn btn-secondary rounded-pill"
+                                        data-bs-dismiss="modal">
+                                        ยกเลิก
+                                    </button>
+                                    <a type="submit" value="ยืนยัน" class="btn btn-warning rounded-pill"
+                                        href="{% url 'delete_staff_manage_parcel' AllParcel.id %}">ยืนยัน</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- moal แก้ไขรายการ -->
+                    <div class="modal fade" id="edititem-{{forloop.counter}}" tabindex="-1"
+                        aria-labelledby="edititemModal" aria-hidden="true">
+                        <div class="modal-dialog modal-lg
+                            modal-fullscreen-lg-down">
+                            <form action="{% url 'edit_staff_manage_parcel' AllParcel.id %}" method="POST"
+                                enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="edititemModal">แก้ไขรายการ {{ AllParcel.name }}</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+
+                                    <div class="modal-body">
+                                        <p>
+                                            <label for="id_name">แก้ไขชื่อวัสดุ :</label>
+                                            <input type="text" name="name" class="form-control rounded-pill"
+                                                maxlength="200" id="id_name" value="{{ AllParcel.name }}">
+                                        </p>
+                                        <p>
+                                            <label for="id_category">ตำแหน่งการวางวัสดุ :</label>
+                                            {{ form.nameposition }}
+                                        </p>
+                                        <p>
+                                            <label for="id_category">เลือกหมวดหมู่วัสดุ :</label>
+                                            {{ form.category }}
+                                        </p>
+                                        <p>
+                                            <label for="id_status">เลือกสถานะวัสดุ :</label>
+                                            {{ form.status }}
+                                        </p>
+                                        <p>
+                                            <label for="id_status">เลือกประเภทของจำนวน :</label>
+                                            {{ form.quantitytype }}
+                                        </p>
+                                        <p>
+                                            <label for="id_quantity">แก้ไขจำนวนวัสดุ :</label>
+                                            <input type="number" name="quantity" class="form-control rounded-pill"
+                                                maxlength="200" id="id_quantity" value="{{ AllParcel.quantity }}">
+                                        </p>
+                                        <p>
+                                            <label for="id_description">รายละเอียดวัสดุ :</label>
+                                            <textarea name="description" cols="40" rows="10"
+                                                class="form-control rounded-5"
+                                                id="id_description">{{ AllParcel.description }}</textarea>
+                                        </p>
+                                        <p>
+                                            <label for="formFileMultiple" class="form-label" for="image">แก้ไขรูปภาพ :</label>
+                                            <input id="image" name="image" class="form-control rounded-pill" type="file" id="formFileMultiple" accept="image/*" multiple />
+                                        </p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn
+                                        btn-secondary rounded-pill" data-bs-dismiss="modal">ยกเลิก</button>
+                                        <button type="submit" class="btn btn-warning rounded-pill">ยืนยัน</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="page-links">
+            {% if page.has_previous %}
+            <a href="?page={{ page.previous_page_number }}">หน้าก่อนหน้า</a>
+            {% endif %} {% if page.has_next %}
+            <a href="?page={{ page.next_page_number }}">หน้าถัดไป</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,242 @@
+{% extends 'home.html' %}
+{% block class_user_durable_articles %}active{% endblock %}
+{% load static %}
+{% block main %}
+
+<div class="container-fluid d-md-flex ">
+    <nav class="col-lg-2 col-md col-sm col-12 bg-white rounded-2 my-3 " width="300">
+        <div class="small p-4">
+            <h6 class="fw-bold">ค้นหาแบบละเอียด</h6>
+            <ul class="list-unstyled components ms-2">
+                <li>
+                    <h6 class="fw-bold">หมวดหมู่</h6>
+                    <li><a href=" /user_durable_articles/" style="text-decoration: none;" class="text-reset">All</a></li>
+                    {% for i in categoryType.all %}
+                    <li><a class="text-reset" style="text-decoration: none;"
+                        href=" /user_durable_articles/?category={{ i.id }}" >{{ i.name_CategoryType }}</a></li>
+                    {% endfor %}
+                </li>
+                <hr>
+                <li>
+                    <h6 class="fw-bold">ประเภท</h6>
+                    <div class="ps-2">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                            <label class="form-check-label" for="flexCheckDefault">
+                                ต้องคืน
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                            <label class="form-check-label" for="flexCheckDefault">
+                                ไม่ต้องคืน
+                            </label>
+                        </div>
+                    </div>
+                </li>
+                <hr>
+                <li>
+                    <h6 class="fw-bold">รายการ</h6>
+                    <div class="ps-2">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                            <label class="form-check-label" for="flexCheckDefault">
+                                วัสดุ
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                            <label class="form-check-label" for="flexCheckDefault">
+                                ครุภัณฑ์
+                            </label>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+
+        </div>
+    </nav>
+
+    <div class="col-lg-10 col-md-10 col-sm-12 col-12 p-md-3 ">
+        <!-- รายการพัสด -->
+        <div class="bg-white d-flex flex-row align-items-center justify-content-between rounded-2 mb-3 px-5 py-3">
+            <div class="d-flex flex-row align-items-center">
+                <div class="px-2 me-2 fw-bold">เรียงโดย</div>
+                <div class="px-2 me-2 btn btn-outline-dark rounded-pill"><small>ที่เกี่ยวข้อง</small></div>
+                <div class="px-2 me-2 btn btn-outline-dark rounded-pill"><small>ล่าสุด</small></div>
+            </div>
+            <div class="align-items-center d-flex flex-row">
+                <div class="dropdown">
+                    <button class="btn btn-outline-dark rounded-pill dropdown-toggle" type="button" id="dropdownMenuButton1"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        ตัวเลือกการแสดงผล
+                    </button>
+                    <ul class="dropdown-menu rounded-pill" aria-labelledby="dropdownMenuButton1">
+                        <div class="nav small text-center ">
+                            <li><a class="fa fa-th dropdown-item active ps-5" data-bs-toggle="tab" href="#table"></a></li>
+                            <li><a class="fa fa-table dropdown-item pe-4" data-bs-toggle="tab" href="#tablelist"></a></li>
+                        </div>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content">
+            <div class="tab-pane  active" id="table">
+                <div class="row small">
+                    {% for AllDurable in  AllDurable%}
+                    <div class="col-8 col-sm-4 col-md-3 col-lg-2 mb-4">
+                        <div class="card border bg-gray ">
+                            <div  class="text-center">
+                                <img src="{{ AllDurable.image.url | safe }}" style="
+                                            object-position: center;
+                                            max-height: 150px;
+                                            margin-bottom: 1rem;">
+                            </div>
+                            <div class="card-body">
+                                <div class="text-center">
+                                    <h5 class="card-title">{{ AllDurable.name }}</h5>
+                                    <span class="mb-4 text-success">{{ Durable.status }}</span>
+                                </div>
+                                <div>
+                                    <div class="d-flex justify-content-between">
+                                        <span>รายการ</span>
+                                        <span>{{ AllDurable.nametype }}</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <span>ประเภท</span>
+                                        <span>{{ AllDurable.statustype }}</span>
+                                    </div>
+                                    {% if AllDurable.quantitytype == "∞" %}
+                                    <div class="d-flex justify-content-between">
+                                        <span>จำนวน</span><span>{{ AllDurable.quantitytype }} </span>
+                                    </div>
+                                    {% else %}
+                                    <div class="d-flex justify-content-between">
+                                        <span>จำนวน</span><span>{{ AllDurable.quantity }} </span>
+                                    </div
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <a href="{% url 'user_detail_durable' AllDurable.id %}" class="stretched-link"></a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% for AllParcel in  AllParcel%}
+                    <div class="col-8 col-sm-4 col-md-3 col-lg-2 mb-4">
+                        <div class="card border bg-gray ">
+                            <div  class="text-center">
+                                <img src="{{ AllParcel.image.url | safe }}" style="
+                                            object-position: center;
+                                            max-height: 150px;
+                                            margin-bottom: 1rem;">
+                            </div>
+                            <div class="card-body">
+                                <div class="text-center">
+                                    <h5 class="card-title">{{ AllParcel.name }}</h5>
+                                    <span class="mb-4 text-success">{{ Parcel.status }}</span>
+                                </div>
+                                <div>
+                                    <div class="d-flex justify-content-between">
+                                        <span>รายการ</span>
+                                        <span>{{ AllParcel.nametype }}</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <span>ประเภท</span>
+                                        <span>{{ AllParcel.statustype }}</span>
+                                    </div>
+                                    {% if AllParcel.quantitytype == "∞" %}
+                                    <div class="d-flex justify-content-between">
+                                        <span>จำนวน</span><span>{{ AllParcel.quantitytype }} </span>
+                                    </div>
+                                    {% else %}
+                                    <div class="d-flex justify-content-between">
+                                        <span>จำนวน</span><span>{{ AllParcel.quantity }} </span>
+                                    </div
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <a href="{% url 'user_detail' AllParcel.id %}" class="stretched-link"></a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content">
+            <div class="tab-pane fade" id="tablelist">
+        <!-- แบบtable -->
+        <table class="table table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th class="col-md-4 text-center" scope="col">รายการ</th>
+                    <th class="col-md-2 text-center" scope="col">หมวดหมู่</th>
+                    <th class="col-md-2 text-center" scope="col">สถานะ</th>
+                    <th class="col-md-2 text-center" scope="col">ประเภท</th>
+                    <th class="col-md-2 text-center" scope="col">จำนวน</th>
+                </tr>
+            </thead>
+            <tbody id="xTable">
+                {% for AllDurable in  AllDurable%}
+                <tr class="qrow text-center" >
+                    <td>
+                        <a  href="{% url 'user_detail_durable' AllDurable.id %}" class="text-start text-black" style="text-decoration:none" >{{ AllDurable.name }}</a>
+                    </td>
+                    <td>
+                        <a href="{% url 'user_detail_durable' AllDurable.id %}" class="text-black" style="text-decoration:none">{{ AllDurable.category }}</a>
+                    </td>
+                    <td>
+                        <a href="{% url 'user_detail_durable' AllDurable.id %}" class="text-black" style="text-decoration:none">{{ AllDurable.status }}</a>
+                    </td>
+                    <td>
+                        <a href="{% url 'user_detail_durable' AllDurable.id %}" class="text-black" style="text-decoration:none">{{ AllDurable.statustype }}</a>
+                    </td>
+                    {% if AllDurable.quantitytype == "∞" %}
+                    <td>
+                        <a href="{% url 'user_detail' AllDurable.id %}" class="text-black" style="text-decoration:none">{{ AllDurable.quantitytype }}</a>
+                    </td>
+                    {% else %}
+                    <td>
+                        <a href="{% url 'user_detail' AllDurable.id %}" class="text-black" style="text-decoration:none">{{ AllDurable.quantity }}</a>
+                    </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+                {% for AllParcel in  AllParcel%}
+                <tr class="qrow text-center">
+                    <td>
+                        <a href="{% url 'user_detail' AllParcel.id %}" class="text-start text-black" style="text-decoration:none" >{{ AllParcel.name }}</a>
+                    </td>
+                    <td>
+                        <a href="{% url 'user_detail' AllParcel.id %}" class="text-black" style="text-decoration:none">{{ AllParcel.category }}</a>
+                    </td>
+                    <td>
+                        <a href="{% url 'user_detail' AllParcel.id %}" class="text-black" style="text-decoration:none">{{ AllParcel.status }}</a>
+                    </td>
+                    <td>
+                        <a href="{% url 'user_detail' AllParcel.id %}" class="text-black" style="text-decoration:none">{{ AllParcel.statustype }}</a>
+                    </td>
+                    {% if AllParcel.quantitytype == "∞" %}
+                    <td>
+                        <a href="{% url 'user_detail' AllParcel.id %}" class="text-black" style="text-decoration:none">{{ AllParcel.quantitytype }}</a>
+                    </td>
+                    {% else %}
+                    <td>
+                        <a href="{% url 'user_detail' AllParcel.id %}" class="text-black" style="text-decoration:none">{{ AllParcel.quantity }}</a>
+                    </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+            </div>
+        </div>
+
+
+            
+        </div>
+    </div>
+</div>
+
+{% endblock %}

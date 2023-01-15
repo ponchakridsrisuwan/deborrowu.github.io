@@ -1,0 +1,120 @@
+{% extends 'home.html' %} 
+{% block main %}
+
+    <div class="container mt-1 p-3 rounded-2 cart bg-white">
+        <div class="d-flex flex-row align-items-center">
+            <span  class="ml-2 fw-bold fs-5">รายการยืมวัสดุ</span>
+        </div>
+        <div class="d-flex row rounded-2 small fw-bold justify-content-between">
+            <div class="d-flex col-sm-12 col-md-12 col-lg-6">
+                <div class="align-items-center">
+                    <span>เรียงโดย</span>
+                    <div class="px-2 me-2 btn btn-outline-dark border-0 rounded-pill">ล่าสุด</div>
+                </div>
+
+            </div>
+            <div class="col-sm-12 col-md-12 col-lg-6">
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2 border-dark" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-dark" type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+        {% for AllLoanParcel in AllLoanParcel %}
+        <div class="container mt-3 p-3 rounded-2 border cart bg-white">
+            <div class="row ">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <h5 class="d-flex text-warning fw-bold  ">{{ AllLoanParcel.status }}</h5>
+                            <div class="d-flex "><a>วันที่ทำรายการ</a> &nbsp <a>{{ AllLoanParcel.date_add }}</a></div><br>
+                            <div class="d-flex "><a>วันที่ต้องการยืม</a> &nbsp <a>{{ AllLoanParcel.start_date }}</a></div><br>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <div class="ms-4 text-muted">
+                                <span>{{ AllLoanParcel.name }}</span><br>
+                            </div>
+                            <div class="small text-muted fs-6">
+                                <span>X {{ AllLoanParcel.quantity }}</span><br>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="ms-3 mb-3">
+                        <span>เหตุผลในการยืม</span><br>
+                        <span class="text-muted">{{ AllLoanParcel.description }}</span>
+                    </div>
+                    <hr>
+                    {% if AllLoanParcel.status == "รอยืนยันการรับ" %}
+                    <div class="ms-3 mb-3">
+                        <span>รายละเอียดจากเจ้าหน้าที่</span><br>
+                        <span class="text-muted">{{ AllLoanParcel.reasonfromstaff }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+                <hr>
+                {% if AllLoanParcel.status == "รออนุมัติ" %}
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <button class="btn btn-warning rounded-pill" type="button" data-bs-toggle="modal"
+                        data-bs-target="#Delete-{{forloop.counter}}">ยกเลิก</button>
+                </div>
+                {% else %}
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <button class="btn btn-success rounded-pill" type="button" data-bs-toggle="modal"
+                        data-bs-target="#Success-{{forloop.counter}}">ยืนยันการรับ</button>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+         <!-- ลบข้อมูล -->
+         <div class="modal fade" name="Delete" id="Delete-{{forloop.counter}}" tabindex="-1"
+         aria-labelledby="DeleteModal" aria-hidden="true">
+         <div class="modal-dialog modal-lg modal-fullscreen-lg-down">
+             <div class="modal-content">
+                 <div class="modal-header">
+                     <h5 class="modal-title" id="DeleteModal">
+                         คุณต้องการยกเลิกการยืม {{ AllLoanParcel.name }} หรือไม่
+                     </h5>
+                     <button type="button" class="btn-close" data-bs-dismiss="modal"
+                         aria-label="Close"></button>
+                 </div>
+                 <div class="modal-footer">
+                     <button type="cancer" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">
+                         ยกเลิก
+                     </button>
+                     <a type="submit" value="ยืนยัน" class="btn btn-warning rounded-pill"
+                         href="{% url 'delete_borrow_parcel' AllLoanParcel.id %}">ยืนยัน</a>
+                 </div>
+             </div>
+         </div>
+     </div>
+
+     <!-- ยืนยันการรับ -->
+     <div class="modal fade" name="Success" id="Success-{{forloop.counter}}" tabindex="-1"
+     aria-labelledby="SuccessModal" aria-hidden="true">
+     <div class="modal-dialog modal-lg modal-fullscreen-lg-down">
+         <div class="modal-content">
+             <div class="modal-header">
+                 <h5 class="modal-title" id="SuccessModal">
+                     ยืนยันการรับ {{ AllLoanParcel.name }} หรือไม่
+                 </h5>
+                 <button type="button" class="btn-close" data-bs-dismiss="modal"
+                     aria-label="Close"></button>
+             </div>
+             <div class="modal-footer">
+                 <button type="cancer" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">
+                     ยกเลิก
+                 </button>
+                 <a type="submit" value="ยืนยัน" class="btn btn-warning rounded-pill"
+                     href="{% url 'confirm_parcel' AllLoanParcel.id %}">ยืนยัน</a>
+             </div>
+         </div>
+     </div>
+ </div>
+
+        {% endfor %}
+
+    </div>
+</div>
+    <br><br>
+{% endblock %}
